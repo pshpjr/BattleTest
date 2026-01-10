@@ -22,15 +22,18 @@ find_package(asio CONFIG REQUIRED)
 include_directories(include)
 
 # Source files
-file(GLOB_RECURSE SOURCES
-    "main.cpp"
-    "src/*.cpp"
-    "src/*.h"
+set(SOURCES
+    main.cpp
+    src/Tag.cpp
+    src/TagHelper.cpp
+    src/base/string.cpp
 )
 
-file(GLOB_RECURSE HEADERS
-    "include/*.h"
-    "include/*.hpp"
+set(HEADERS
+    include/Tag.h
+    include/TagHelper.h
+    include/base/string.h
+        include/base/Formattable.h
 )
 
 # Main executable
@@ -77,13 +80,9 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Define all source and header files for formatting/linting
-file(GLOB_RECURSE ALL_PROJECT_FILES
-    "src/*.cpp"
-    "src/*.h"
-    "include/*.h"
-    "include/*.hpp"
-    "tests/*.cpp"
-    "tests/*.h"
+set(ALL_PROJECT_FILES
+    ${SOURCES}
+    ${HEADERS}
 )
 
 # Find clang-format
