@@ -6,7 +6,7 @@
 #include <optional>
 #include "base/Formattable.h"
 
-class Tag : public Formattable {
+class Tag {
 public:
     // 빈 문자열을 나타내는 npos
     static const Tag npos;
@@ -21,17 +21,12 @@ public:
     bool operator==(const Tag& other) const;
     bool operator!=(const Tag& other) const;
 
-    // TagHelper에서 사용할 접근자
-    [[nodiscard]] const std::vector<std::string>& GetParts() const;
-    [[nodiscard]] bool IsNpos() const;
-
-    // IStringify 구현
-    [[nodiscard]] std::string ToString() const override;
-
+    [[nodiscard]] std::string ToString() const;
     // 계층 구조 관련 메서드
-    [[nodiscard]] std::optional<bool> IsParent(const Tag& child) const;
-    [[nodiscard]] std::optional<bool> IsChild(const Tag& parent) const;
-    [[nodiscard]] std::optional<bool> IsSibling(const Tag& other) const;
+    [[nodiscard]] bool IsParent(const Tag& child) const;
+    [[nodiscard]] bool IsChild(const Tag& parent) const;
+    [[nodiscard]] bool IsSibling(const Tag& other) const;
+    [[nodiscard]] std::optional<Tag> GetCommonParent(const Tag& other) const;
 
     // 태그 정보 메서드
     [[nodiscard]] size_t GetDepth() const;
@@ -45,3 +40,5 @@ private:
 
 // 팩토리 함수 - 유효하지 않은 입력이면 nullopt 리턴
 std::optional<Tag> MakeTag(std::string_view name);
+
+DEFINE_FORMATTER(Tag);

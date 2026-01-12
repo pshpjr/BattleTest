@@ -5,14 +5,13 @@
 TEST(TagTest, DefaultConstructor)
 {
     Tag empty;
-    EXPECT_TRUE(empty.IsNpos());
     EXPECT_EQ(empty, Tag::npos);
 }
 
 TEST(TagTest, SingleLevelTag)
 {
     Tag tag("weapon");
-    EXPECT_FALSE(tag.IsNpos());
+    EXPECT_NE(tag, Tag::npos);
     EXPECT_EQ(tag.GetDepth(), 1);
     EXPECT_EQ(tag.ToString(), "weapon");
 }
@@ -50,9 +49,7 @@ TEST(TagTest, IsParent_BasicRelationship)
     Tag parent("weapon");
     Tag child("weapon.sword");
 
-    auto result = parent.IsParent(child);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(parent.IsParent(child));
 }
 
 TEST(TagTest, IsParent_MultiLevel)
@@ -60,18 +57,14 @@ TEST(TagTest, IsParent_MultiLevel)
     Tag root("weapon");
     Tag grandchild("weapon.sword.legendary");
 
-    auto result = root.IsParent(grandchild);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(root.IsParent(grandchild));
 }
 
 TEST(TagTest, IsParent_SameTag)
 {
     Tag tag("weapon");
 
-    auto result = tag.IsParent(tag);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(tag.IsParent(tag));
 }
 
 TEST(TagTest, IsParent_NotParent)
@@ -79,9 +72,7 @@ TEST(TagTest, IsParent_NotParent)
     Tag tag1("weapon");
     Tag tag2("armor");
 
-    auto result = tag1.IsParent(tag2);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(tag1.IsParent(tag2));
 }
 
 TEST(TagTest, IsParent_WithNpos)
@@ -89,8 +80,8 @@ TEST(TagTest, IsParent_WithNpos)
     Tag tag("weapon");
     Tag npos;
 
-    EXPECT_FALSE(tag.IsParent(npos).has_value());
-    EXPECT_FALSE(npos.IsParent(tag).has_value());
+    EXPECT_FALSE(tag.IsParent(npos));
+    EXPECT_FALSE(npos.IsParent(tag));
 }
 
 // 계층 구조 테스트 - IsChild
@@ -99,9 +90,7 @@ TEST(TagTest, IsChild_BasicRelationship)
     Tag parent("weapon");
     Tag child("weapon.sword");
 
-    auto result = child.IsChild(parent);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(child.IsChild(parent));
 }
 
 TEST(TagTest, IsChild_NotChild)
@@ -109,9 +98,7 @@ TEST(TagTest, IsChild_NotChild)
     Tag tag1("weapon");
     Tag tag2("armor");
 
-    auto result = tag2.IsChild(tag1);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(tag2.IsChild(tag1));
 }
 
 // 계층 구조 테스트 - IsSibling
@@ -120,18 +107,14 @@ TEST(TagTest, IsSibling_BasicRelationship)
     Tag sword("weapon.sword");
     Tag bow("weapon.bow");
 
-    auto result = sword.IsSibling(bow);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(sword.IsSibling(bow));
 }
 
 TEST(TagTest, IsSibling_SameTag)
 {
     Tag tag("weapon.sword");
 
-    auto result = tag.IsSibling(tag);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(tag.IsSibling(tag));
 }
 
 TEST(TagTest, IsSibling_DifferentDepth)
@@ -139,9 +122,7 @@ TEST(TagTest, IsSibling_DifferentDepth)
     Tag tag1("weapon");
     Tag tag2("weapon.sword");
 
-    auto result = tag1.IsSibling(tag2);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(tag1.IsSibling(tag2));
 }
 
 TEST(TagTest, IsSibling_DifferentParent)
@@ -149,9 +130,7 @@ TEST(TagTest, IsSibling_DifferentParent)
     Tag tag1("weapon.sword");
     Tag tag2("armor.helmet");
 
-    auto result = tag1.IsSibling(tag2);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(tag1.IsSibling(tag2));
 }
 
 TEST(TagTest, IsSibling_RootLevel)
@@ -159,9 +138,7 @@ TEST(TagTest, IsSibling_RootLevel)
     Tag tag1("weapon");
     Tag tag2("armor");
 
-    auto result = tag1.IsSibling(tag2);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(tag1.IsSibling(tag2));
 }
 
 // Tag 메서드 테스트 - GetDepth
@@ -187,7 +164,7 @@ TEST(TagTest, GetRoot_Npos)
     Tag npos;
     Tag root = npos.GetRoot();
 
-    EXPECT_TRUE(root.IsNpos());
+    EXPECT_EQ(root, Tag::npos);
 }
 
 // Tag 메서드 테스트 - GetParent
@@ -206,7 +183,7 @@ TEST(TagTest, GetParent_OutOfRange)
     Tag tag("weapon.sword");
     Tag parent = tag.GetParent(5);
 
-    EXPECT_TRUE(parent.IsNpos());
+    EXPECT_EQ(parent, Tag::npos);
 }
 
 // Tag 메서드 테스트 - GetSubTag

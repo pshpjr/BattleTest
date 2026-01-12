@@ -26,18 +26,6 @@ bool Tag::operator!=(const Tag& other) const
     return parts_ != other.parts_;
 }
 
-// parts_ 접근자
-const std::vector<std::string>& Tag::GetParts() const
-{
-    return parts_;
-}
-
-// npos 여부 확인 (빈 벡터면 npos)
-bool Tag::IsNpos() const
-{
-    return parts_.empty();
-}
-
 // ToString 구현 - parts_를 '.'로 연결
 std::string Tag::ToString() const
 {
@@ -59,12 +47,12 @@ std::string Tag::ToString() const
 }
 
 // parent가 child의 부모인지 확인
-std::optional<bool> Tag::IsParent(const Tag& child) const
+bool Tag::IsParent(const Tag& child) const
 {
     // npos 처리
-    if (IsNpos() || child.IsNpos())
+    if (*this == Tag::npos || child == Tag::npos)
     {
-        return std::nullopt;
+        return false;
     }
 
     // 같은 태그면 서로가 부모/자식
@@ -92,18 +80,18 @@ std::optional<bool> Tag::IsParent(const Tag& child) const
 }
 
 // child가 parent의 자식인지 확인
-std::optional<bool> Tag::IsChild(const Tag& parent) const
+bool Tag::IsChild(const Tag& parent) const
 {
     return parent.IsParent(*this);
 }
 
 // 형제 관계 확인 (같은 부모를 가진 태그)
-std::optional<bool> Tag::IsSibling(const Tag& other) const
+bool Tag::IsSibling(const Tag& other) const
 {
     // npos 처리
-    if (IsNpos() || other.IsNpos())
+    if (*this == Tag::npos || other == Tag::npos)
     {
-        return std::nullopt;
+        return false;
     }
 
     // 같은 태그는 형제가 아님
@@ -144,7 +132,7 @@ size_t Tag::GetDepth() const {
 // 루트 태그 반환
 Tag Tag::GetRoot() const {
     // npos는 npos가 루트
-    if (IsNpos()) {
+    if (*this == Tag::npos) {
         return Tag::npos;
     }
 
@@ -188,6 +176,50 @@ Tag Tag::GetSubTag(size_t depth) const {
     }
 
     return Tag(result);
+}
+
+// 두 태그의 공통 부모 반환
+std::optional<Tag> Tag::GetCommonParent(const Tag& other) const
+{
+    // npos 처리
+    if (*this == Tag::npos || other == Tag::npos)
+    {
+        return std::nullopt;
+    }
+
+    std::vector<std::string> common_parts;
+    size_t min_size = std::min(parts_.size(), other.parts_.size());
+
+    for (size_t i = 0; i < min_size; ++i)
+    {
+        if (parts_[i] == other.parts_[i])
+        {
+            common_parts.push_back(parts_[i]);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    // 공통 부모가 없으면 nullopt
+    if (common_parts.empty())
+    {
+        return std::nullopt;
+    }
+
+    // 공통 부분을 '.'로 연결해서 Tag 생성
+    std::string common_str;
+    for (size_t i = 0; i < common_parts.size(); ++i)
+    {
+        if (i > 0)
+        {
+            common_str += '.';
+        }
+        common_str += common_parts[i];
+    }
+
+    return Tag(common_str);
 }
 
 // 팩토리 함수 - 유효하지 않은 입력이면 nullopt 리턴

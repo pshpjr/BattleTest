@@ -7,9 +7,7 @@ TEST(TagHelperTest, IsParentOf_BasicRelationship)
     Tag parent("weapon");
     Tag child("weapon.sword");
 
-    auto result = TagHelper::IsParentOf(parent, child);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(TagHelper::IsParentOf(parent, child));
 }
 
 TEST(TagHelperTest, IsParentOf_NotParent)
@@ -17,18 +15,14 @@ TEST(TagHelperTest, IsParentOf_NotParent)
     Tag tag1("weapon");
     Tag tag2("armor");
 
-    auto result = TagHelper::IsParentOf(tag1, tag2);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(TagHelper::IsParentOf(tag1, tag2));
 }
 
 TEST(TagHelperTest, IsParentOf_SameTag)
 {
     Tag tag("weapon");
 
-    auto result = TagHelper::IsParentOf(tag, tag);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(TagHelper::IsParentOf(tag, tag));
 }
 
 TEST(TagHelperTest, IsParentOf_WithNpos)
@@ -36,8 +30,8 @@ TEST(TagHelperTest, IsParentOf_WithNpos)
     Tag tag("weapon");
     Tag npos;
 
-    EXPECT_FALSE(TagHelper::IsParentOf(tag, npos).has_value());
-    EXPECT_FALSE(TagHelper::IsParentOf(npos, tag).has_value());
+    EXPECT_FALSE(TagHelper::IsParentOf(tag, npos));
+    EXPECT_FALSE(TagHelper::IsParentOf(npos, tag));
 }
 
 // IsChildOf 테스트
@@ -46,9 +40,7 @@ TEST(TagHelperTest, IsChildOf_BasicRelationship)
     Tag parent("weapon");
     Tag child("weapon.sword");
 
-    auto result = TagHelper::IsChildOf(child, parent);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(TagHelper::IsChildOf(child, parent));
 }
 
 TEST(TagHelperTest, IsChildOf_NotChild)
@@ -56,9 +48,7 @@ TEST(TagHelperTest, IsChildOf_NotChild)
     Tag tag1("weapon");
     Tag tag2("armor");
 
-    auto result = TagHelper::IsChildOf(tag2, tag1);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_FALSE(*result);
+    EXPECT_FALSE(TagHelper::IsChildOf(tag2, tag1));
 }
 
 TEST(TagHelperTest, IsChildOf_MultiLevel)
@@ -66,9 +56,7 @@ TEST(TagHelperTest, IsChildOf_MultiLevel)
     Tag root("weapon");
     Tag grandchild("weapon.sword.legendary");
 
-    auto result = TagHelper::IsChildOf(grandchild, root);
-    ASSERT_TRUE(result.has_value());
-    EXPECT_TRUE(*result);
+    EXPECT_TRUE(TagHelper::IsChildOf(grandchild, root));
 }
 
 // GetCommonParent 테스트

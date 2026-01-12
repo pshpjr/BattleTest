@@ -2,6 +2,8 @@
 
 #include <string>
 #include <vector>
+#include <format>
+#include <concepts>
 
 // 문자열을 소문자로 변환
 std::string MakeLower(std::string str);
@@ -14,3 +16,4 @@ std::vector<std::string> Split(std::string_view str, std::string_view delimiters
 
 // 구분자로 문자열 분리 (단일 구분자)
 std::vector<std::string> Split(std::string_view str, char delimiter);
+
