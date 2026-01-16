@@ -30,14 +30,19 @@ python -m tool.dbgenerator.gen_db --config my_config.json
     "password": "password",
     "database": "game_db"
   },
-  "tables": ["users", "inventory"],
-  "stored_procedures": ["GetUserInfo", "GetInventory"],
+  "excluded_tables": ["internal_log", "temp_cache"],
+  "excluded_stored_procedures": ["sp_internal_helper", "sp_admin_only"],
   "output": {
     "directory": "generated/db",
     "namespace": "DB"
   }
 }
 ```
+
+**참고:**
+- 데이터베이스의 모든 테이블과 SP를 자동으로 가져옵니다
+- `excluded_tables`, `excluded_stored_procedures`에 제외할 항목만 나열하세요
+- 새로운 테이블/SP가 추가되면 자동으로 포함됩니다
 
 ## 디렉토리 구조
 

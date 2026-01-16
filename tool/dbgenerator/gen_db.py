@@ -12,8 +12,13 @@ def save_migration_files(extractor: MetadataExtractor, config: dict):
     migrations_dir = Path('db/migrations')
     migrations_dir.mkdir(parents=True, exist_ok=True)
 
+    # 모든 테이블 조회 후 제외 목록 필터링
+    all_tables = extractor.get_all_tables()
+    excluded_tables = set(config.get('excluded_tables', []))
+    tables = [t for t in all_tables if t not in excluded_tables]
+
     # 테이블 CREATE 쿼리 저장
-    for table_name in config.get('tables', []):
+    for table_name in tables:
         create_query = extractor.extract_table_create(table_name)
         file_path = migrations_dir / f"{table_name}.sql"
 
@@ -22,8 +27,13 @@ def save_migration_files(extractor: MetadataExtractor, config: dict):
 
         print(f"✓ Saved: {file_path}")
 
+    # 모든 SP 조회 후 제외 목록 필터링
+    all_sps = extractor.get_all_stored_procedures()
+    excluded_sps = set(config.get('excluded_stored_procedures', []))
+    sps = [sp for sp in all_sps if sp not in excluded_sps]
+
     # SP CREATE 쿼리 저장
-    for sp_name in config.get('stored_procedures', []):
+    for sp_name in sps:
         create_query = extractor.extract_sp_create(sp_name)
         file_path = migrations_dir / f"{sp_name}.sql"
 
@@ -59,7 +69,11 @@ def run_generator(config_path: str):
             namespace=output_config['namespace']
         )
 
-        sp_names = config.get('stored_procedures', [])
+        # 모든 SP 조회 후 제외 목록 필터링
+        all_sps = extractor.get_all_stored_procedures()
+        excluded_sps = set(config.get('excluded_stored_procedures', []))
+        sp_names = [sp for sp in all_sps if sp not in excluded_sps]
+
         generator.generate_all(extractor, sp_names)
 
     print("\n✅ All done!")

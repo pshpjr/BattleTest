@@ -6,15 +6,13 @@
     "password": "password",
     "database": "game_db"
   },
-  "tables": [
-    "users",
-    "inventory",
-    "guilds"
+  "excluded_tables": [
+    "internal_log",
+    "temp_cache"
   ],
-  "stored_procedures": [
-    "GetUserInfo",
-    "GetInventory",
-    "GetGuildMembers"
+  "excluded_stored_procedures": [
+    "sp_internal_helper",
+    "sp_admin_only"
   ],
   "output": {
     "directory": "generated/db",

@@ -159,3 +159,27 @@ class MetadataExtractor:
             input_params=params,
             output_columns=columns
         )
+
+    def get_all_stored_procedures(self) -> List[str]:
+        """데이터베이스의 모든 SP 목록 조회"""
+        query = """
+        SELECT ROUTINE_NAME
+        FROM INFORMATION_SCHEMA.ROUTINES
+        WHERE ROUTINE_SCHEMA = %s
+        AND ROUTINE_TYPE = 'PROCEDURE'
+        ORDER BY ROUTINE_NAME
+        """
+        self.cursor.execute(query, (self.db_config['database'],))
+        return [row[0] for row in self.cursor.fetchall()]
+
+    def get_all_tables(self) -> List[str]:
+        """데이터베이스의 모든 테이블 목록 조회"""
+        query = """
+        SELECT TABLE_NAME
+        FROM INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_SCHEMA = %s
+        AND TABLE_TYPE = 'BASE TABLE'
+        ORDER BY TABLE_NAME
+        """
+        self.cursor.execute(query, (self.db_config['database'],))
+        return [row[0] for row in self.cursor.fetchall()]
