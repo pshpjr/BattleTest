@@ -28,13 +28,15 @@ set(SOURCES
     src/Tag.cpp
     src/TagHelper.cpp
     src/base/string.cpp
+    src/base/assert.cpp
 )
 
 set(HEADERS
     include/Tag.h
     include/TagHelper.h
     include/base/string.h
-        include/base/Formattable.h
+    include/base/Formattable.h
+    include/base/assert.h
 )
 
 # Main executable
