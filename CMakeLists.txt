@@ -29,6 +29,7 @@ set(SOURCES
     src/TagHelper.cpp
     src/base/string.cpp
     src/base/assert.cpp
+    src/base/Logger.cpp
 )
 
 set(HEADERS
@@ -37,6 +38,7 @@ set(HEADERS
     include/base/string.h
     include/base/Formattable.h
     include/base/assert.h
+    include/base/Logger.h
 )
 
 # Main executable
